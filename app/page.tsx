@@ -1,8 +1,9 @@
+import Hero from "@/modules/Home/Hero"
 
 const Home = () => {
   return (
     <div>
-      <h1 className="heading text-3xl font-bold">Home</h1>
+      <Hero />
     </div>
   )
 }

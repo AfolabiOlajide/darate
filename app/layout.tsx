@@ -4,6 +4,7 @@ import "./globals.css";
 import { APP_DESCRIPTION, APP_TITLE } from "@/lib/constants";
 import { NextUIProvider } from "@nextui-org/react";
 import Nav from "@/components/Nav";
+import NavigationTab from "@/components/NavigationTab";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const merriweather = Merriweather({
@@ -31,6 +32,7 @@ export default function RootLayout({
                     <main>
                         <Nav />
                         {children}
+                        <NavigationTab />
                     </main>
                 </NextUIProvider>
             </body>
