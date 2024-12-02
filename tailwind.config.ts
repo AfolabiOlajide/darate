@@ -10,6 +10,7 @@ const config = {
     content: [
         "./pages/**/*.{ts,tsx}",
         "./components/**/*.{ts,tsx}",
+        "./modules/**/*.{ts,tsx}",
         "./app/**/*.{ts,tsx}",
         "./src/**/*.{ts,tsx}",
         "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
