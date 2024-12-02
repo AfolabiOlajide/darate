@@ -3,7 +3,7 @@ import FeaturesSectionDemo from "@/components/features-section-demo-3"
 
 const Features = () => {
     return (
-        <section className="">
+        <section className="cont">
             <FeaturesSectionDemo />
         </section>
     )
