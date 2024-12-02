@@ -26,7 +26,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${inter.className} ${merriweather.variable} w-full min-h-screen bg-black text-white`}
+                className={`${inter.className} ${merriweather.variable} w-full min-h-screen bg-gray-950 text-white`}
             >
                 <NextUIProvider>
                     <main>
