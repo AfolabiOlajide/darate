@@ -30,9 +30,13 @@ export default function RootLayout({
             >
                 <NextUIProvider>
                     <main>
-                        <Nav />
-                        {children}
-                        <NavigationTab />
+                        <div className="main-content relative z-[1]">
+                            <Nav />
+                            {children}
+                        </div>
+                        <div className="nav-tab relative z-[3]">
+                            <NavigationTab />
+                        </div>
                     </main>
                 </NextUIProvider>
             </body>
