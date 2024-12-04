@@ -1,8 +1,11 @@
+import PageHeader from '@/components/PageHeader'
 import React from 'react'
 
 const Orgainzations = () => {
     return (
-        <div>Orgainzations</div>
+        <div className='cont'>
+            <PageHeader title="Organizations" />
+        </div>
     )
 }
 
