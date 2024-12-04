@@ -84,20 +84,20 @@
 
 /* tags */
 .nature{
-  @apply bg-nature
+  @apply bg-nature text-black
 }
 .health{
   @apply bg-health text-white
 }
 .education{
-  @apply bg-education
+  @apply bg-education text-black
 }
 .tech{
-  @apply bg-tech
+  @apply bg-tech text-black
 }
 .org{
-  @apply bg-org
+  @apply bg-org text-black
 }
 .other{
-  @apply bg-other
+  @apply bg-other text-black
 }
