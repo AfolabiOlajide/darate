@@ -1,3 +1,4 @@
+import Bottom from "@/components/Bottom"
 import Faq from "@/components/Faq"
 import Features from "@/modules/Home/Features"
 import Hero from "@/modules/Home/Hero"
@@ -10,7 +11,7 @@ const Home = () => {
       <Features />
       <Inspire />
       <Faq />
-      <div className="bottom pt-[6rem]"></div>
+      <Bottom />
     </div>
   )
 }
