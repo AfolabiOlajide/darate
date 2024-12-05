@@ -1,6 +1,14 @@
+import { defineChain } from "thirdweb/chains";
+import { createThirdwebClient } from "thirdweb";
+
 export const APP_TITLE = "Darate";
 export const APP_DESCRIPTION =
     "Worldclass Crypto Donation Platform, generosity meets innovation";
+
+export const chainId = defineChain(11155111);
+export const client = createThirdwebClient({
+    clientId: process.env.NEXT_PUBLIC_DARATE_CLIENT_ID as string,
+});
 
 export const DUMMY_DATA = [
     {

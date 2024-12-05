@@ -3,14 +3,36 @@ import React from "react";
 import { BackgroundGradient } from "./ui/background-gradient";
 import Image from "next/image";
 import Link from "next/link";
+import useContract from "@/hooks/useContract";
+import { useReadContract } from "thirdweb/react";
 
 const CampaignList = ({ campaigns }: { campaigns: any[] }) => {
+    const { contract } = useContract({
+        address: process.env.NEXT_PUBLIC_DARATE_CONTRACT_ADDRESS as string,
+    });
+
+    const { data, isPending } = useReadContract({
+        contract,
+        method: "function getAllCampaigns() view returns ((address campaignAddress, address owner, string title, uint256 creationTime)[])",
+        params: [],
+    });
+
+    // console.log("data: ", data);
+    // console.log("loading: ", isPending);
+
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-[2rem]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[2rem]">
             {campaigns.map((campaign: any) => {
                 const random4 = Math.floor(Math.random() * 4) + 1;
                 const random3 = Math.floor(Math.random() * 3) + 1;
-                const imgUrl = campaign.category === "nature" ? `/nature/${random4}.jpg` : campaign.category === "health" ? `/health/${random4}.jpg` : campaign.category === "education" ? `/edu/${random4}.jpg` : `/tech/${random3}.jpg`;
+                const imgUrl =
+                    campaign.category === "nature"
+                        ? `/nature/${random4}.jpg`
+                        : campaign.category === "health"
+                        ? `/health/${random4}.jpg`
+                        : campaign.category === "education"
+                        ? `/edu/${random4}.jpg`
+                        : `/tech/${random3}.jpg`;
                 return (
                     <Link href={`/campaigns/${campaign.id}`} key={campaign.id}>
                         <BackgroundGradient className="rounded-[22px] p-[1rem] bg-zinc-900 cursor-pointer">
@@ -27,7 +49,19 @@ const CampaignList = ({ campaigns }: { campaigns: any[] }) => {
                             <p className="text-sm text-neutral-400">
                                 {campaign.description}
                             </p>
-                            <button className={`rounded-full px-4 py-1 flex items-center space-x-1 mt-4 text-xs ${ campaign.category === "nature" ? "nature" : campaign.category === "health" ? "health" : campaign.category === "education" ? "education" : campaign.category === "tech" ? "tech" : "other" }`}>
+                            <button
+                                className={`rounded-full px-4 py-1 flex items-center space-x-1 mt-4 text-xs ${
+                                    campaign.category === "nature"
+                                        ? "nature"
+                                        : campaign.category === "health"
+                                        ? "health"
+                                        : campaign.category === "education"
+                                        ? "education"
+                                        : campaign.category === "tech"
+                                        ? "tech"
+                                        : "other"
+                                }`}
+                            >
                                 <span>{campaign.category}</span>
                             </button>
                         </BackgroundGradient>

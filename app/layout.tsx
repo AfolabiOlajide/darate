@@ -5,6 +5,7 @@ import { APP_DESCRIPTION, APP_TITLE } from "@/lib/constants";
 import { NextUIProvider } from "@nextui-org/react";
 import Nav from "@/components/Nav";
 import NavigationTab from "@/components/NavigationTab";
+import { ThirdwebProvider } from "thirdweb/react";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const merriweather = Merriweather({
@@ -29,15 +30,17 @@ export default function RootLayout({
                 className={`${inter.className} ${merriweather.variable} w-full min-h-screen bg-gray-950 text-white`}
             >
                 <NextUIProvider>
-                    <main>
-                        <div className="main-content relative z-[1]">
-                            <Nav />
-                            {children}
-                        </div>
-                        <div className="nav-tab relative z-[3]">
-                            <NavigationTab />
-                        </div>
-                    </main>
+                    <ThirdwebProvider>
+                        <main>
+                            <div className="main-content relative z-[1]">
+                                <Nav />
+                                {children}
+                            </div>
+                            <div className="nav-tab relative z-[3]">
+                                <NavigationTab />
+                            </div>
+                        </main>
+                    </ThirdwebProvider>
                 </NextUIProvider>
             </body>
         </html>
