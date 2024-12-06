@@ -101,3 +101,27 @@
 .other{
   @apply bg-other text-black
 }
+
+table{
+  @apply w-full border border-neutral-800
+}
+
+thead{
+  @apply bg-neutral-800 
+}
+
+th{
+  @apply p-[1rem]
+}
+
+td{
+  @apply p-[1rem]
+}
+
+tr{
+  @apply border border-neutral-800
+}
+
+td{
+  @apply border border-neutral-800
+}
