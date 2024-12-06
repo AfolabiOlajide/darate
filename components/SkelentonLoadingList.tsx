@@ -1,9 +1,9 @@
 import React from "react";
 
-const SkelentonLoadingList = ({ withImage }: { withImage?: boolean }) => {
+const SkelentonLoadingList = ({ withImage, length }: { withImage?: boolean, length?: number }) => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 md:gap-2">
-            {Array.from({ length: 8 }).map((_, index) => {
+            {Array.from({ length: length || 8 }).map((_, index) => {
                 return (
                     <div className="skelenton bg-neutral-700 rounded-md flex flex-col gap-[1.5rem] p-[1rem]" key={index}>
                         {withImage && (

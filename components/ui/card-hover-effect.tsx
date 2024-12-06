@@ -52,7 +52,7 @@ export const HoverEffect = ({
             )}
           </AnimatePresence>
           <Card>
-            <CardTitle>{item.title}</CardTitle>
+            <CardTitle address={item.id} />
             <CardDescription address={item.id} />
           </Card>
         </Link>
@@ -83,15 +83,23 @@ export const Card = ({
 };
 export const CardTitle = ({
   className,
-  children,
+  address
 }: {
   className?: string;
-  children: React.ReactNode;
+  address: string;
 }) => {
+  const { contract } = useContract({
+    address: address
+  })
+  const { data, isPending } = useReadContract({
+    contract,
+    method: "function name() view returns (string)",
+    params: [],
+  });
   return (
-    <h4 className={cn("text-zinc-100 font-bold tracking-wide mt-4", className)}>
-      {children}
-    </h4>
+    <div className={cn("text-zinc-100 font-bold tracking-wide mt-4", className)}>
+      {isPending ? <TextSkelenton /> : data}
+    </div>
   );
 };
 export const CardDescription = ({
