@@ -20,8 +20,8 @@ const InvoiceContainer = ({ id }: { id: string }) => {
     }, [id]);
 
     return (
-        <div className="mt-[2rem]">
-            <BackgroundGradient className="rounded-[22px] p-[1rem] py-[2rem] bg-zinc-900 text-neutral-300 cursor-pointer">
+        <div className="mt-[3rem]">
+            <BackgroundGradient className="rounded-[22px] p-[1rem] py-[2rem] bg-zinc-900 text-neutral-300 break-all">
                 <div className="">
                     <div className="status">
                         {invoice?.status ? (
@@ -34,24 +34,46 @@ const InvoiceContainer = ({ id }: { id: string }) => {
                             </span>
                         )}
                     </div>
-                    <h2 className="mt-[2rem]">Invoice #: <span className="break-words">{id}</span></h2>
-                    <div className="mt-[2rem]">Title: {invoice?.title}</div>
-                    <div className="mt-[2rem]">
-                        Amount:{" "}
-                        {invoice?.amount &&
-                            ethers.utils.formatEther(invoice?.amount)}{" "}
-                        eth
+                    <h2 className="mt-[2rem] flex items-start gap-4">
+                        <span className="whitespace-nowrap">Invoice #:</span>{" "}
+                        <span className="break-words">{id}</span>
+                    </h2>
+                    <div className="mt-[2rem] flex items-start gap-4">
+                        <span className="whitespace-nowrap">Title:</span>{" "}
+                        {invoice?.title ? (
+                            <span>{invoice?.title}</span>
+                        ) : (
+                            <TextSkelenton />
+                        )}
                     </div>
-                    <div className="mt-[2rem]">
-                        Receipient: <span className="text-brand break-words">{invoice?.receipient_address}</span>
+                    <div className="mt-[2rem] flex items-start gap-4">
+                        <span className="whitespace-nowrap">Amount:</span>
+                        {invoice?.amount ? (
+                            <span>
+                                {ethers.utils.formatEther(invoice?.amount)} eth
+                            </span>
+                        ) : (
+                            <TextSkelenton />
+                        )}
                     </div>
-                    <div className="mt-[2rem]">
-                        Donator: <span className="text-brand break-words">{invoice?.donator_address}</span>
+                    <div className="mt-[2rem] flex items-start gap-4">
+                        <span className="whitespace-nowrap">Receipient:</span>{" "}
+                        <span className="text-brand break-words">
+                            {invoice?.receipient_address || <TextSkelenton />}
+                        </span>
                     </div>
-                    <div className="mt-[2rem]">
-                        Created:{" "}
-                        {invoice?.created_at && (
+                    <div className="mt-[2rem] flex items-start gap-4">
+                        <span className="whitespace-nowrap">Donator:</span>{" "}
+                        <span className="text-brand break-words">
+                            {invoice?.donator_address || <TextSkelenton />}
+                        </span>
+                    </div>
+                    <div className="mt-[2rem] flex items-start gap-4">
+                        <span className="whitespace-nowrap">Created:</span>{" "}
+                        {invoice?.created_at ? (
                             <DateContainer time={invoice.created_at} />
+                        ) : (
+                            <TextSkelenton />
                         )}
                     </div>
                 </div>
@@ -61,5 +83,11 @@ const InvoiceContainer = ({ id }: { id: string }) => {
 };
 
 export default InvoiceContainer;
+
+const TextSkelenton = () => {
+    return (
+        <div className="w-[10rem] h-[1rem] bg-zinc-800 animate-pulse ml-3 rounded-md"></div>
+    );
+};
 
 // /invoice/01a9413e5698af1a45340e98c2150541c0fa9f9baed693e5a61fd938281ea939be
