@@ -40,7 +40,7 @@ const OrganizationList = () => {
     return (
         <div className="mt-[3rem]">
             {
-                isPending && <SkelentonLoadingList withImage />
+                isPending && <SkelentonLoadingList />
             }
             {
                 data && data?.length > 0 && (<HoverEffect items={organizations} />)
