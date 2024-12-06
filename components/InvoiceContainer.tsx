@@ -84,7 +84,7 @@ const InvoiceContainer = ({ id }: { id: string }) => {
 
 export default InvoiceContainer;
 
-const TextSkelenton = () => {
+export const TextSkelenton = () => {
     return (
         <div className="w-[10rem] h-[1rem] bg-zinc-800 animate-pulse ml-3 rounded-md"></div>
     );
