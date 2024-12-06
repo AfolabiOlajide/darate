@@ -1,9 +1,13 @@
-import React from 'react'
+import CampaignContainer from "@/modules/Campaign/CampaignContainer";
+import React from "react";
 
-const SingleCampaign = ({params: {id}}: {params: {id: string}}) => {
+const SingleCampaign = ({ params: { id } }: { params: { id: string } }) => {
     return (
-        <div>SingleCampaign {id}</div>
-    )
-}
+        <div>
+            SingleCampaign {id}
+            <CampaignContainer />
+        </div>
+    );
+};
 
-export default SingleCampaign
+export default SingleCampaign;
