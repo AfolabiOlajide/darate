@@ -1,8 +1,11 @@
+import SingleOrganizationContainer from '@/modules/Organization/SingleOrganizationContainer'
 import React from 'react'
 
 const SingleOrganization = ({params: {id}}: {params: {id: string}}) => {
     return (
-        <div>SingleOrganization {id}</div>
+        <div className='cont'>
+            <SingleOrganizationContainer address={id} />
+        </div>
     )
 }
 
