@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.8",
+    "@radix-ui/react-tabs": "^1.1.1",
     "@requestnetwork/payment-processor": "^0.50.0",
     "@requestnetwork/request-client.js": "^0.52.0",
     "@requestnetwork/web3-signature": "^0.8.3",
