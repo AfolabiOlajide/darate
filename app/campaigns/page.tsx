@@ -9,7 +9,7 @@ const Campaigns = () => {
     return (
         <div className='cont'>
             <PageHeader title="Campaigns" />
-            <div className="campaigns mt-[2rem]">
+            <div className="campaigns mt-[3rem]">
                 <CampaignList campaigns={DUMMY_DATA} />
             </div>
             <Bottom />
