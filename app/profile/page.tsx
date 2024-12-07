@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import UserCampaigns from "@/modules/Profile/UserCampaigns";
 import UserOrganization from "@/modules/Profile/UserOrganization";
 import UserInvoices from "@/modules/Profile/UserInvoices";
+import Bottom from "@/components/Bottom";
 
 type TabTypes = "Campaigns" | "Organization" | "Invoices";
 
@@ -54,6 +55,9 @@ const Profile = () => {
                 {active === "Organization" && <UserOrganization />}
                 {active === "Invoices" && <UserInvoices />}
             </div>
+            <Bottom />
+            <Bottom />
+            <Bottom />
         </div>
     );
 };

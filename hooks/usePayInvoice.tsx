@@ -59,6 +59,9 @@ const usePayInvoice = ({
     }, [isError]);
 
     async function payInvoice() {
+        if(typeof window === "undefined") {
+            return;
+        }
         if (account && window.ethereum) {
             const provider = new providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();

@@ -120,6 +120,9 @@ const useCreateInvoice = ({
             toast.error("Please connect your wallet");
             return;
         }
+        if(typeof window === "undefined") {
+            return;
+        }
         if (window.ethereum) {
             const provider = new providers.Web3Provider(window.ethereum);
 
