@@ -21,12 +21,17 @@ const useCreateInvoice = ({
     recieverIdentity,
     payerIdentity,
     amountToBePaid,
-    contractAddress
+    contractAddress,
 }: useRequestProps) => {
     const account = useActiveAccount();
-    const {contract} = useContract({address: recieverIdentity});
-    const { mutate: sendTransaction, isPending, isError, isSuccess } = useSendTransaction();
-    
+    const { contract } = useContract({ address: recieverIdentity });
+    const {
+        mutate: sendTransaction,
+        isPending,
+        isError,
+        isSuccess,
+    } = useSendTransaction();
+
     const saveInvoiceId = (invoiceId: string) => {
         const transaction = prepareContractCall({
             contract,
@@ -68,9 +73,12 @@ const useCreateInvoice = ({
 
             // The expected amount as a string, in parsed units, respecting `decimals`
             // Consider using `parseUnits()` from ethers or viem
-            expectedAmount: amountToBePaid.length > 0 ? ethers.utils
-                .parseEther(amountToBePaid.toString())
-                .toString() : "",
+            expectedAmount:
+                amountToBePaid.length > 0
+                    ? ethers.utils
+                          .parseEther(amountToBePaid.toString())
+                          .toString()
+                    : "",
 
             // The payee identity. Not necessarily the same as the payment recipient.
             // Reciever Identity
@@ -120,45 +128,44 @@ const useCreateInvoice = ({
             toast.error("Please connect your wallet");
             return;
         }
-        if(typeof window === "undefined") {
-            return;
-        }
-        if (window.ethereum) {
-            const provider = new providers.Web3Provider(window.ethereum);
+        if (typeof window !== "undefined") {
+            if (window.ethereum) {
+                const provider = new providers.Web3Provider(window.ethereum);
 
-            const web3SignatureProvider = new Web3SignatureProvider(
-                provider.provider
-            );
-            console.log("Creating request client....");
-            toast("Creating Request client....");
-            const requestClient = new RequestNetwork({
-                nodeConnectionConfig: {
-                    baseURL: process.env.NEXT_PUBLIC_NODE_URL,
-                },
-                signatureProvider: web3SignatureProvider,
-            });
-            try {
-                const request = await requestClient.createRequest(
-                    createRequestParameters as ICreateRequestParameters
+                const web3SignatureProvider = new Web3SignatureProvider(
+                    provider.provider
                 );
-                const confirmedRequestData =
-                    await request.waitForConfirmation();
-                // console.log(
-                //     `Created Request: ${JSON.stringify(confirmedRequestData)}`
-                // );
-                console.log("requestId: ", confirmedRequestData.requestId);
-                if (confirmedRequestData.requestId) {
-                    const invoiceId = confirmedRequestData.requestId;
-                    toast.success("Invoice Id created successfully");
-                    toast("Saving Invoice Id on the blockchain...");
-                    saveInvoiceId(invoiceId);
+                console.log("Creating request client....");
+                toast("Creating Request client....");
+                const requestClient = new RequestNetwork({
+                    nodeConnectionConfig: {
+                        baseURL: process.env.NEXT_PUBLIC_NODE_URL,
+                    },
+                    signatureProvider: web3SignatureProvider,
+                });
+                try {
+                    const request = await requestClient.createRequest(
+                        createRequestParameters as ICreateRequestParameters
+                    );
+                    const confirmedRequestData =
+                        await request.waitForConfirmation();
+                    // console.log(
+                    //     `Created Request: ${JSON.stringify(confirmedRequestData)}`
+                    // );
+                    console.log("requestId: ", confirmedRequestData.requestId);
+                    if (confirmedRequestData.requestId) {
+                        const invoiceId = confirmedRequestData.requestId;
+                        toast.success("Invoice Id created successfully");
+                        toast("Saving Invoice Id on the blockchain...");
+                        saveInvoiceId(invoiceId);
+                    }
+                } catch (error) {
+                    toast.error("Error creating invoice");
+                    console.log("request error: ", error);
                 }
-            } catch (error) {
-                toast.error("Error creating invoice");
-                console.log("request error: ", error);
+            } else {
+                toast.error("Please install metamask");
             }
-        } else {
-            toast.error("Please install metamask");
         }
     }
 
