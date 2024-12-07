@@ -1,5 +1,7 @@
 "use client";
 
+import { truncateAddress } from "@/lib/utils";
+
 export type Donator = {
     donator: string;
     amountDonated: BigInt;
@@ -7,7 +9,7 @@ export type Donator = {
 
 const DonatorsTable = ({donators}: {donators: Donator[]}) => {
     return (
-        <div>
+        <div className="mt-[3rem] w-full overflow-x-auto">
             <table>
                 <thead className="">
                     <tr>
@@ -18,7 +20,7 @@ const DonatorsTable = ({donators}: {donators: Donator[]}) => {
                 <tbody>
                     {donators.map((donator, index) => (
                         <tr key={index}>
-                            <td className="text-brand">{donator.donator}</td>
+                            <td className="text-brand">{truncateAddress(donator.donator)}</td>
                             <td>{donator.amountDonated.toString()}</td>
                         </tr>
                     ))}

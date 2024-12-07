@@ -145,7 +145,7 @@ const useCreateInvoice = ({
                 if (confirmedRequestData.requestId) {
                     const invoiceId = confirmedRequestData.requestId;
                     toast.success("Invoice Id created successfully");
-                    toast("Save Invoice Id on the blockchain...");
+                    toast("Saving Invoice Id on the blockchain...");
                     saveInvoiceId(invoiceId);
                 }
             } catch (error) {

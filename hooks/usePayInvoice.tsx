@@ -1,19 +1,47 @@
 "use client";
 import { toast } from "sonner";
-import { hasSufficientFunds, payRequest } from "@requestnetwork/payment-processor";
-import { useActiveAccount } from "thirdweb/react";
+import {
+    hasSufficientFunds,
+    payRequest,
+} from "@requestnetwork/payment-processor";
+import { useActiveAccount, useSendTransaction } from "thirdweb/react";
 import { RequestNetwork } from "@requestnetwork/request-client.js";
 import { providers } from "ethers";
+import { prepareContractCall, sendTransaction } from "thirdweb";
+import { address } from "framer-motion/client";
+import useContract from "./useContract";
 
-const usePayInvoice = ({payerIdentity}: {payerIdentity: string}) => {
+const usePayInvoice = ({
+    payerIdentity,
+    recepientIdentity,
+    invoiceId
+}: {
+    payerIdentity: string;
+    recepientIdentity: string;
+    invoiceId: string
+}) => {
     const account = useActiveAccount();
+    const { mutate: sendTransaction } = useSendTransaction();
+    const { contract } = useContract({
+        address: recepientIdentity,
+    });
 
     const requestClientWithoutSignature = new RequestNetwork({
         nodeConnectionConfig: {
             baseURL: process.env.NEXT_PUBLIC_NODE_URL,
         },
     });
-    async function payInvoice(invoiceId: string) {
+
+    const savePaymentTxHash = (paymentTxHash: string) => {
+        const transaction = prepareContractCall({
+            contract,
+            method: "function addPaymentTxHash(string _invoiceId, string _paymentTxHash)",
+            params: [invoiceId, paymentTxHash],
+        });
+        sendTransaction(transaction);
+    };
+
+    async function payInvoice() {
         if (account && window.ethereum) {
             const provider = new providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -51,6 +79,8 @@ const usePayInvoice = ({payerIdentity}: {payerIdentity: string}) => {
                     console.log(`Payment complete. ${paymentTx.hash}`);
                     if (paymentTx.hash) {
                         toast.success("Payment complete");
+                        toast("Saving payment transaction hash...");
+                        savePaymentTxHash(paymentTx.hash);
                         console.log(`Payment complete. ${paymentTx.hash}`);
                     }
                 } catch (error) {
@@ -70,6 +100,6 @@ const usePayInvoice = ({payerIdentity}: {payerIdentity: string}) => {
     }
 
     return { payInvoice };
-}
+};
 
-export default usePayInvoice
+export default usePayInvoice;
