@@ -12,7 +12,7 @@ const InvoiceTable = ({
     owner,
 }: {
     invoices: InvoiceTableType[];
-    owner: string;
+    owner?: string;
 }) => {
     const account = useActiveAccount();
     return (
@@ -30,11 +30,7 @@ const InvoiceTable = ({
                 </thead>
                 <tbody>
                     {invoices.map((invoice, i) => {
-                        if (
-                            invoice.donator_address !== account?.address ||
-                            owner.length < 0 || owner === undefined || owner === null
-                        )
-                            return;
+                        if(owner !== account?.address && invoice.donator_address !== account?.address) return 
 
                         return (
                             <tr key={i}>

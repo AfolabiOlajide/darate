@@ -25,17 +25,23 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
     const [amount, setAmount] = useState("0.1");
     const tabList: TabTypes[] = ["Donators", "Invoices"];
     const [active, setActive] = useState<TabTypes>(tabList[0]);
-    const { createInvoice } = useCreateInvoice({
-        recieverIdentity: address,
-        payerIdentity: account?.address as string,
-        amountToBePaid: amount
-    })
-    const moveTab = (idx: number) => {
-        setActive(tabList[idx]);
-    };
     const { contract } = useContract({
         address: address,
     });
+    const { data: owner, isPending: ownerIsPending } = useReadContract({
+        contract,
+        method: "function owner() view returns (address)",
+        params: [],
+    });
+    const { createInvoice } = useCreateInvoice({
+        recieverIdentity: owner as string,
+        payerIdentity: account?.address as string,
+        amountToBePaid: amount,
+        contractAddress: address,
+    });
+    const moveTab = (idx: number) => {
+        setActive(tabList[idx]);
+    };
 
     const { data: name, isPending: nameIsPending } = useReadContract({
         contract,
@@ -56,14 +62,8 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
         params: [],
     });
 
-    const { data: owner, isPending: ownerIsPending } = useReadContract({
-        contract,
-        method: "function owner() view returns (address)",
-        params: [],
-    });
-
     const handleGenerateInvoice = async () => {
-        if(!account) {
+        if (!account) {
             toast.warning("Please connect your wallet");
             return;
         }
@@ -77,7 +77,7 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
 
     const handleSetAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
         setAmount(e.target.value);
-    }
+    };
 
     // get invoices
     const { fetchUsersInvoice } = useFetchInvoice();
@@ -89,7 +89,7 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
         const invoices = await fetchUsersInvoice(address);
         setInvoices(invoices as InvoiceTableType[]);
         setInvoiceLoading(false);
-    }
+    };
 
     useEffect(() => {
         async function fetchInvoice() {
@@ -195,7 +195,10 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
                     </div>
                     {/* refresh invoice button */}
                     <div className="">
-                        <MdOutlineRefresh className="text-2xl text-neutral-500 cursor-pointer" onClick={refreshInvoices}/>
+                        <MdOutlineRefresh
+                            className="text-2xl text-neutral-500 cursor-pointer"
+                            onClick={refreshInvoices}
+                        />
                     </div>
                 </div>
                 <div className="tab-content mt-6">
@@ -217,48 +220,109 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
                                 </p>
                             </div>
                         )}
-                        {/* invoices */}
-                        {
-                            active === "Invoices" &&
-                            !ownerIsPending &&
-                            !invoiceLoading &&
-                            account?.address &&
-                            owner === account?.address &&
-                            invoices.length > 0 && (
-                                <InvoiceTable
-                                    invoices={invoices as InvoiceTableType[]}
-                                    owner={account.address}
-                                />
+                    {/* invoices */}
+                    {active === "Invoices" &&
+                        !ownerIsPending && // check if owner is loading
+                        !invoiceLoading && // check if invoice is loading
+                        // account?.address && // check if user is connected
+                        (invoices.some(
+                            (invoice) =>
+                                invoice.donator_address === account?.address
+                        ) ||
+                            owner === account?.address) &&
+                        invoices.length > 0 && (
+                            <InvoiceTable
+                                invoices={invoices as InvoiceTableType[]}
+                                owner={account?.address}
+                            />
+                        )}
+                        {active === "Invoices" &&
+                        !invoiceLoading &&
+                        invoices.length === 0 && (
+                            <div className="flex items-center justify-center h-[20vh]">
+                                <p className="text-brand text-2xl font-bold">
+                                    No invoice has been created
+                                </p>
+                            </div>
+                        )}
+                    {active === "Invoices" && account?.address && invoiceLoading && (
+                        <SkelentonText height={10} />
+                    )}
+                    {active === "Invoices" &&
+                        !ownerIsPending &&
+                        !invoiceLoading &&
+                        account?.address &&
+                        !(
+                            owner === account?.address ||
+                            invoices.some(
+                                (invoice) =>
+                                    invoice.donator_address === account?.address
                             )
-                        }{
-                            active === "Invoices" &&
-                            !invoiceLoading &&
-                            invoices.length === 0 && (
-                                <div className="flex items-center justify-center h-[20vh]">
-                                    <p className="text-brand text-2xl font-bold">
-                                        No invoice has been created
-                                    </p>
-                                </div>
+                        ) && (
+                            <div className="flex items-center justify-center h-[20vh]">
+                                <p className="text-brand text-2xl font-bold">
+                                    You are not the owner of this organization, or
+                                    you don&apos;t have any invoice for this
+                                    organization.
+                                </p>
+                            </div>
+                        )}
+                    {active === "Invoices" && !account?.address && (
+                        <div className="flex items-center justify-center h-[20vh]">
+                            <p className="text-brand text-2xl font-bold">
+                                Connect your wallet to view invoices
+                            </p>
+                        </div>
+                    )}
+{/* 
+
+
+                    {active === "Invoices" &&
+                        !ownerIsPending &&
+                        !invoiceLoading &&
+                        account?.address &&
+                        !(
+                            owner === account?.address ||
+                            invoices.some(
+                                (invoice) =>
+                                    invoice.donator_address === account?.address
                             )
-                        }{
-                            active === "Invoices" &&
-                            invoiceLoading && (
-                                <SkelentonText height={10}/>
-                            )
-                        }{
-                            active === "Invoices" &&
-                            !ownerIsPending &&
-                            !invoiceLoading &&
-                            account?.address &&
-                            owner !== account?.address &&
-                            invoices.length > 0 && (
-                                <div className="flex items-center justify-center h-[20vh]">
-                                    <p className="text-brand text-2xl font-bold">
-                                        You are not the owner of this organization, or you don&apos;t have any invoice for this organization.
-                                    </p>
-                                </div>
-                            )
-                        }
+                        ) && (
+                            <div className="flex items-center justify-center h-[20vh]">
+                                <p className="text-brand text-2xl font-bold">
+                                    You are not the owner of this organization,
+                                    or you don&apos;t have any invoice for this
+                                    organization.
+                                </p>
+                            </div>
+                        )}
+                    {active === "Invoices" &&
+                        !ownerIsPending &&
+                        !invoiceLoading &&
+                        account?.address &&
+                        (invoices.some(
+                            (invoice) =>
+                                invoice.donator_address === account?.address
+                        ) ||
+                            owner === account?.address) &&
+                        invoices.length > 0 && (
+                            <InvoiceTable
+                                invoices={invoices as InvoiceTableType[]}
+                                owner={account.address}
+                            />
+                        )}
+                    {active === "Invoices" &&
+                        !invoiceLoading &&
+                        invoices.length === 0 && (
+                            <div className="flex items-center justify-center h-[20vh]">
+                                <p className="text-brand text-2xl font-bold">
+                                    No invoice has been created
+                                </p>
+                            </div>
+                        )}
+                    {active === "Invoices" && invoiceLoading && (
+                        <SkelentonText height={10} />
+                    )} */}
                 </div>
             </div>
             <Bottom />

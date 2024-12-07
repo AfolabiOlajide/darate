@@ -27,17 +27,24 @@ const CampaignContainer = ({ address }: { address: string }) => {
     const [amount, setAmount] = useState("0.1");
     const tabList: TabTypes[] = ["Donators", "Invoices"];
     const [active, setActive] = useState<TabTypes>(tabList[0]);
+    const { contract } = useContract({
+        address: address,
+    });
+    const { data: owner, isPending: ownerPending } = useReadContract({
+        contract,
+        method: "function owner() view returns (address)",
+        params: [],
+    });
+
     const { createInvoice } = useCreateInvoice({
-        recieverIdentity: address,
+        recieverIdentity: owner as string,
         payerIdentity: account?.address as string,
         amountToBePaid: amount,
+        contractAddress: address,
     });
     const moveTab = (idx: number) => {
         setActive(tabList[idx]);
     };
-    const { contract } = useContract({
-        address: address,
-    });
 
     const { data: title, isPending: titlePending } = useReadContract({
         contract,
@@ -64,11 +71,7 @@ const CampaignContainer = ({ address }: { address: string }) => {
         params: [],
     });
 
-    const { data: owner, isPending: ownerPending } = useReadContract({
-        contract,
-        method: "function owner() view returns (address)",
-        params: [],
-    });
+    // console.log("donators: ", donators);
 
     const { data: targetAmount, isPending: targetAmountPending } =
         useReadContract({
@@ -101,22 +104,22 @@ const CampaignContainer = ({ address }: { address: string }) => {
 
     const refreshInvoices = async () => {
         setInvoiceLoading(true);
-        const invoices = await fetchUsersInvoice(address);
-        setInvoices(invoices as InvoiceTableType[]);
+        const invoices = await fetchUsersInvoice(owner as string);
+        setInvoices(invoices?.reverse() as InvoiceTableType[]);
         setInvoiceLoading(false);
     };
 
     useEffect(() => {
         async function fetchInvoice() {
             setInvoiceLoading(true);
-            const invoices = await fetchUsersInvoice(address);
-            setInvoices(invoices as InvoiceTableType[]);
+            const invoices = await fetchUsersInvoice(owner as string);
+            setInvoices(invoices?.reverse() as InvoiceTableType[]);
             setInvoiceLoading(false);
         }
 
         fetchInvoice();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [address]);
+    }, [address, active]);
 
     return (
         <div className="mt-[2rem]">
@@ -157,7 +160,13 @@ const CampaignContainer = ({ address }: { address: string }) => {
                             0.2 ETH
                         </h3>
                         <div className="text-neutral-500 text-sm">
-                            of { !targetAmountPending && targetAmount && ethers.utils.formatEther(targetAmount?.toString())} ETH
+                            of{" "}
+                            {!targetAmountPending &&
+                                targetAmount &&
+                                ethers.utils.formatEther(
+                                    targetAmount?.toString()
+                                )}{" "}
+                            ETH
                         </div>
                         {/* create Invoice */}
                         <div className="mt-[3rem]">
@@ -182,7 +191,7 @@ const CampaignContainer = ({ address }: { address: string }) => {
             </div>
             {/* bottom content */}
             <div className="bottom-content">
-                <div className="mt-[3rem] flex justify-between items-center">
+                <div className="mt-[3rem] flex gap-4 items-center">
                     {/* tabs */}
                     <div className="tab ">
                         {tabList.map((tab, idx) => (
@@ -245,14 +254,18 @@ const CampaignContainer = ({ address }: { address: string }) => {
                         )}
                     {/* invoices */}
                     {active === "Invoices" &&
-                        !ownerPending &&
-                        !invoiceLoading &&
-                        account?.address &&
-                        owner === account?.address &&
+                        !ownerPending && // check if owner is loading
+                        !invoiceLoading && // check if invoice is loading
+                        // account?.address && // check if user is connected
+                        (invoices.some(
+                            (invoice) =>
+                                invoice.donator_address === account?.address
+                        ) ||
+                            owner === account?.address) &&
                         invoices.length > 0 && (
                             <InvoiceTable
                                 invoices={invoices as InvoiceTableType[]}
-                                owner={account.address}
+                                owner={account?.address}
                             />
                         )}
                     {active === "Invoices" &&
@@ -264,23 +277,35 @@ const CampaignContainer = ({ address }: { address: string }) => {
                                 </p>
                             </div>
                         )}
-                    {active === "Invoices" && invoiceLoading && (
+                    {active === "Invoices" && account?.address && invoiceLoading && (
                         <SkelentonText height={10} />
                     )}
                     {active === "Invoices" &&
                         !ownerPending &&
                         !invoiceLoading &&
                         account?.address &&
-                        owner !== account?.address &&
-                        invoices.length > 0 && (
+                        !(
+                            owner === account?.address ||
+                            invoices.some(
+                                (invoice) =>
+                                    invoice.donator_address === account?.address
+                            )
+                        ) && (
                             <div className="flex items-center justify-center h-[20vh]">
                                 <p className="text-brand text-2xl font-bold">
-                                    You are not the owner of this campaign,
-                                    or you don&apos;t have any invoice for this
+                                    You are not the owner of this campaign, or
+                                    you don&apos;t have any invoice for this
                                     campaign.
                                 </p>
                             </div>
                         )}
+                    {active === "Invoices" && !account?.address && (
+                        <div className="flex items-center justify-center h-[20vh]">
+                            <p className="text-brand text-2xl font-bold">
+                                Connect your wallet to view invoices
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
             <Bottom />

@@ -56,6 +56,8 @@ const InvoiceContainer = ({ id }: { id: string }) => {
         handleFetchInvoiceById();
     }, [id]);
 
+    // console.log("invoice Ids", invoiceIds);
+
     return (
         <div className="mt-[3rem]">
             <BackgroundGradient className="rounded-[22px] p-[1rem] py-[2rem] bg-zinc-900 text-neutral-300 break-all">

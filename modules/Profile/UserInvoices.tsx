@@ -22,7 +22,7 @@ const UserInvoices = () => {
             } else {
                 setInvoiceLoading(true);
                 const invoices = await fetchUsersInvoice(account?.address);
-                setInvoices(invoices as InvoiceTableType[]);
+                setInvoices(invoices?.reverse() as InvoiceTableType[]);
                 setInvoiceLoading(false);
             }
         }
@@ -33,7 +33,7 @@ const UserInvoices = () => {
     return (
         <div className="">
             <div className="relative overflow-x-auto w-full">
-                {account && !invoiceLoading && (
+                {account && !invoiceLoading && invoices.length > 0 && (
                     <table>
                         <thead className="">
                             <tr>
@@ -102,7 +102,17 @@ const UserInvoices = () => {
                     </table>
                 )}
             </div>
-            {account && invoiceLoading && <SkelentonText height={10} />}
+            {account && invoiceLoading ? (
+                <SkelentonText height={10} />
+            ) : (
+                invoices.length === 0 && (
+                    <div className="flex items-center justify-center h-[20vh]">
+                        <p className="text-brand text-2xl font-bold">
+                            There is no invoice to show
+                        </p>
+                    </div>
+                )
+            )}
             {!account && (
                 <div className="flex items-center justify-center h-[50vh]">
                     <p className="text-brand text-2xl font-bold">

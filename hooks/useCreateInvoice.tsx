@@ -14,12 +14,14 @@ type useRequestProps = {
     recieverIdentity: string;
     payerIdentity: string;
     amountToBePaid: string;
+    contractAddress: string;
 };
 
 const useCreateInvoice = ({
     recieverIdentity,
     payerIdentity,
     amountToBePaid,
+    contractAddress
 }: useRequestProps) => {
     const account = useActiveAccount();
     const {contract} = useContract({address: recieverIdentity});
@@ -42,7 +44,7 @@ const useCreateInvoice = ({
 
     useEffect(() => {
         if (isError) {
-            toast.error("Invoice Id saved successfully");
+            toast.error("Error saving invoice Id");
         }
     }, [isError]);
 

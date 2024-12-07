@@ -10,18 +10,23 @@ import { providers } from "ethers";
 import { prepareContractCall, sendTransaction } from "thirdweb";
 import { address } from "framer-motion/client";
 import useContract from "./useContract";
+import { useEffect } from "react";
 
 const usePayInvoice = ({
     payerIdentity,
     recepientIdentity,
-    invoiceId
+    invoiceId,
 }: {
     payerIdentity: string;
     recepientIdentity: string;
-    invoiceId: string
+    invoiceId: string;
 }) => {
     const account = useActiveAccount();
-    const { mutate: sendTransaction } = useSendTransaction();
+    const {
+        mutate: sendTransaction,
+        isSuccess,
+        isError,
+    } = useSendTransaction();
     const { contract } = useContract({
         address: recepientIdentity,
     });
@@ -32,14 +37,26 @@ const usePayInvoice = ({
         },
     });
 
-    const savePaymentTxHash = (paymentTxHash: string) => {
+    const donate = (donationAmount: number) => {
         const transaction = prepareContractCall({
             contract,
-            method: "function addPaymentTxHash(string _invoiceId, string _paymentTxHash)",
-            params: [invoiceId, paymentTxHash],
+            method: "function donate(address _donator, uint256 _amountDonated)",
+            params: [payerIdentity, BigInt(donationAmount)],
         });
         sendTransaction(transaction);
     };
+
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success("Donation saved successfully");
+        }
+    }, [isSuccess]);
+
+    useEffect(() => {
+        if (isError) {
+            toast.error("Error saving donation");
+        }
+    }, [isError]);
 
     async function payInvoice() {
         if (account && window.ethereum) {
@@ -70,17 +87,14 @@ const usePayInvoice = ({
                 // user has sufficient funds proceed with payment
                 // add modal to show user has suffiecient funds
                 toast.success("User has sufficient funds");
-                console.log("user has sufficient funds");
                 // proceed with payment
                 try {
                     const paymentTx = await payRequest(requestData, signer);
                     await paymentTx.wait(2);
-                    toast.success("Payment complete");
-                    console.log(`Payment complete. ${paymentTx.hash}`);
                     if (paymentTx.hash) {
-                        toast.success("Payment complete");
-                        toast("Saving payment transaction hash...");
-                        savePaymentTxHash(paymentTx.hash);
+                        toast.success("Payment Sent Successfully");
+                        toast("Saving donation to blockchain...");
+                        donate(Number(requestData.expectedAmount));
                         console.log(`Payment complete. ${paymentTx.hash}`);
                     }
                 } catch (error) {
