@@ -6,10 +6,10 @@ import UserCampaigns from "@/modules/Profile/UserCampaigns";
 import UserOrganization from "@/modules/Profile/UserOrganization";
 import UserInvoices from "@/modules/Profile/UserInvoices";
 
-type TabTypes = "campaigns" | "organization" | "invoices";
+type TabTypes = "Campaigns" | "Organization" | "Invoices";
 
 const Profile = () => {
-    const tabList: TabTypes[] = ["campaigns", "organization", "invoices"];
+    const tabList: TabTypes[] = ["Campaigns", "Organization", "Invoices"];
     const [active, setActive] = useState<TabTypes>(tabList[0]);
 
     const moveTab = (idx: number) => {
@@ -50,9 +50,9 @@ const Profile = () => {
                 ))}
             </div>
             <div className="content mt-[2rem]">
-                {active === "campaigns" && <UserCampaigns />}
-                {active === "organization" && <UserOrganization />}
-                {active === "invoices" && <UserInvoices />}
+                {active === "Campaigns" && <UserCampaigns />}
+                {active === "Organization" && <UserOrganization />}
+                {active === "Invoices" && <UserInvoices />}
             </div>
         </div>
     );
