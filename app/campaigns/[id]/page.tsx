@@ -3,9 +3,8 @@ import React from "react";
 
 const SingleCampaign = ({ params: { id } }: { params: { id: string } }) => {
     return (
-        <div>
-            SingleCampaign {id}
-            <CampaignContainer />
+        <div className="cont">
+            <CampaignContainer  address={id}/>
         </div>
     );
 };
