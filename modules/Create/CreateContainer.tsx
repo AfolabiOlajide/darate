@@ -13,7 +13,12 @@ import { useRouter } from "next/navigation";
 
 const CreateContainer = () => {
     const router = useRouter();
-    const { mutate: sendTransaction, isPending, isSuccess, isError } = useSendTransaction();
+    const {
+        mutate: sendTransaction,
+        isPending,
+        isSuccess,
+        isError,
+    } = useSendTransaction();
     const { contract } = useContract({
         address: process.env.NEXT_PUBLIC_DARATE_CONTRACT_ADDRESS as string,
     });
@@ -27,6 +32,7 @@ const CreateContainer = () => {
     const [CampaignType, setCampaignType] = useState<
         "organization" | "campaign"
     >("campaign");
+    const [createLoading, setCreateLoading] = useState(false);
 
     const handleFormFieldChange = (fieldName: any, e: any) => {
         setDetails({ ...details, [fieldName]: e.target.value });
@@ -55,8 +61,9 @@ const CreateContainer = () => {
             const transaction = prepareContractCall({
                 contract,
                 method: "function createOrganization(string _name, string _description)",
-                params: [name, description]
+                params: [name, description],
             });
+            setCreateLoading(true);
             sendTransaction(transaction);
         } else if (CampaignType === "campaign") {
             if (Number.isNaN(Number(details.targetAmount))) {
@@ -75,9 +82,7 @@ const CreateContainer = () => {
             const description = details.description;
             const category = details.category;
             const targetAmount = BigInt(
-                ethers.utils
-                    .parseEther(details.targetAmount.toString())
-                    .toNumber()
+                Number(ethers.utils.parseEther(details.targetAmount.toString()))
             );
             // console.log(title, description, category, targetAmount);
 
@@ -86,12 +91,13 @@ const CreateContainer = () => {
                 method: "function createCampaign(string _title, string _description, string _category, uint256 _targetAmount)",
                 params: [title, description, category, targetAmount],
             });
+            setCreateLoading(true);
             sendTransaction(transaction);
         }
     };
 
     useEffect(() => {
-        if(isSuccess){
+        if (isSuccess) {
             setDetails({
                 title: "",
                 name: "",
@@ -99,21 +105,23 @@ const CreateContainer = () => {
                 category: "Health",
                 targetAmount: "",
             });
+            setCreateLoading(false);
             toast.success("Campaign created successfully");
-            if(CampaignType === "organization"){
-                router.push("/organizations")
-            }else if(CampaignType === "campaign"){
-                router.push("/campaigns")
+            if (CampaignType === "organization") {
+                router.push("/organizations");
+            } else if (CampaignType === "campaign") {
+                router.push("/campaigns");
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccess]);
 
     useEffect(() => {
-        if(isError){
+        if (isError) {
+            setCreateLoading(false);
             toast.error("Something went wrong try again");
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isError]);
 
     return (
@@ -242,6 +250,7 @@ const CreateContainer = () => {
                             title={`Create ${CampaignType}`}
                             styles="bg-brand text-black"
                             onClick={handleCreateCampaign}
+                            loading={createLoading}
                         />
                     </div>
                 </div>

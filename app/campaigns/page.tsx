@@ -1,7 +1,6 @@
 import Bottom from '@/components/Bottom'
 import CampaignList from '@/components/CampaignList'
 import PageHeader from '@/components/PageHeader'
-import { DUMMY_DATA } from '@/lib/constants'
 import React from 'react'
 
 const Campaigns = () => {
@@ -10,7 +9,7 @@ const Campaigns = () => {
         <div className='cont'>
             <PageHeader title="Campaigns" />
             <div className="campaigns mt-[3rem]">
-                <CampaignList campaigns={DUMMY_DATA} />
+                <CampaignList />
             </div>
             <Bottom />
         </div>
