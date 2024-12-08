@@ -2,10 +2,22 @@
 import PageHeader from "@/components/PageHeader";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import UserCampaigns from "@/modules/Profile/UserCampaigns";
-import UserOrganization from "@/modules/Profile/UserOrganization";
-import UserInvoices from "@/modules/Profile/UserInvoices";
+// import UserCampaigns from "@/modules/Profile/UserCampaigns";
+// import UserOrganization from "@/modules/Profile/UserOrganization";
+// import UserInvoices from "@/modules/Profile/UserInvoices";
 import Bottom from "@/components/Bottom";
+
+import dynamic from 'next/dynamic';
+
+const UserCampaigns = dynamic(() => import('@/modules/Profile/UserCampaigns'), {
+    ssr: false // This ensures the component is not SSR'd
+});
+const UserInvoices = dynamic(() => import('@/modules/Profile/UserInvoices'), {
+    ssr: false // This ensures the component is not SSR'd
+});
+const UserOrganization = dynamic(() => import('@/modules/Profile/UserOrganization'), {
+    ssr: false // This ensures the component is not SSR'd
+});
 
 type TabTypes = "Campaigns" | "Organization" | "Invoices";
 
