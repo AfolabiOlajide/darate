@@ -7,12 +7,12 @@ function Faq() {
         {
             question: "How many organizations can I create",
             answer:
-                "You can olny create one organization, but you can create as many campaigns as you want.",
+                "You can olny create one organization per account, but you can create as many campaigns as you want.",
             open: true
         },
         {
             question: "How can i add the Sepolia Network to my metamask",
-            answer: "Go to Chainlist.org then connect to your metamask wallet, search for Sepolia and then click to add to metamask",
+            answer: "Go to Chainlist.org then connect to your metamask wallet, search for Sepolia with chain id 11155111 and then click to add to metamask",
             open: false
         },
         {
@@ -21,21 +21,16 @@ function Faq() {
             answer: "No, there is no limit, you can create as many campaigns as you want.",
             open: false
         },
-        // {
-        //     question: "How do I get a my image link",
-        //     answer: "For now we do not support the upload of images, you can search the web for the image you want using website like pexel and paste in the field available.",
-        //     open: false
-        // },
         {
             question: "Are we paying a fee to use this platform",
-            answer: "You are not required to pay any fee, but for every donation we charge a small fee of 0.1% to help empower us to do more.",
+            answer: "The platform is free for everyone to use.",
             open: false
         },
-        // {
-        //     question: "I love this platform, how do i donate towards the growth",
-        //     answer: "Thanks for the consideration we so much appreciate, you can click the link below the FAQs or search for the creator ID of 0",
-        //     open: false
-        // }
+        {
+            question: "I love this platform, how do I donate towards the growth",
+            answer: "Navigate to the organization page and you'll see an organization named Darate you can donate to that oragnization.",
+            open: false
+        }
     ]);
 
     const toggleFAQ = (index: number) => {
