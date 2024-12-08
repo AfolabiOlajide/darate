@@ -1,40 +1,39 @@
 "use client";
 import Bottom from "@/components/Bottom";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
-import { desc } from "framer-motion/client";
 import React from "react";
 
 const HowItWorks = () => {
     const createContent = [
         {
-            title: "Title",
-            description: "Enter a title for your campaign/organization",
+            title: "Navigate",
+            description: "Navigate to the create page.",
         },
         {
-            title: "Title",
-            description: "Enter a title for your campaign/organization",
+            title: "Choose",
+            description: "CHoose either a campaign or an organization and fill in the details.",
         },
         {
-            title: "Title",
-            description: "Enter a title for your campaign/organization",
+            title: "Create",
+            description: "Click the create button to create your campaign/organization.",
         },
     ];
     const donateContent = [
         {
-            title: "Title",
-            description: "Enter a title for your campaign/organization",
+            title: "Navigate",
+            description: "Navigate to the campaign/organization page.",
         },
         {
-            title: "Title",
-            description: "Enter a title for your campaign/organization",
+            title: "Choose",
+            description: "Choose from the list whichever resonates with your values.",
         },
         {
-            title: "Title",
-            description: "Enter a title for your campaign/organization",
+            title: "Generate",
+            description: "Generate an invoice which you can pay immediately or later.",
         },
         {
-            title: "Title",
-            description: "Enter a title for your campaign/organization",
+            title: "Pay",
+            description: "Pay the invoice to complete the donation process.",
         },
     ];
 
@@ -46,8 +45,7 @@ const HowItWorks = () => {
                 </h4>
 
                 <p className="text-sm lg:text-base  max-w-2xl  my-4 mx-auto text-neutral-300 text-center font-normal dark:text-neutral-300">
-                    From creating campaings/organizations in 3 easy steps to
-                    donating to campaigns/organizations in 4 easy steps
+                    Create a campaign in 3 easy steps, donate in 4 easy steps.
                 </p>
             </div>
             <div className="mt-[3rem] grid grid-cols-1 md:grid-cols-2 gap-4">
