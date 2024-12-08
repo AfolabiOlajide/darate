@@ -14,6 +14,7 @@ const Home = () => {
       <Inspire />
       <Faq />
       <Bottom />
+      <Bottom />
     </div>
   )
 }
