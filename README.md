@@ -41,3 +41,18 @@ Welcome to Darate, a decentralized donation platform designed to empower individ
 - Inspired by the spirit of giving and the power of blockchain.
 - Special thanks to the Request Network team for their hackathon, which gave birth to this application.
 - Join us in shaping the future of generosity with Darate!
+
+## Next Steps
+- [ ] Allow image upload
+- [ ] Alolow custom invoice messages
+- [ ] Advance user profiles
+- [ ] Verifying organizations
+- [ ] Updating profiles
+- [ ] User Data protection and managing access control
+- [ ] Send emails when a donation have been made
+- [ ] Better user experience 
+- [ ] Proper Transaction loading flow
+- [ ] Add progress bar for campaigns
+- [ ] Show invoices specific only to the platform
+- [ ] Invoice payment reminders
+- [ ] Implement gasless transactions (Account Abstraction)
