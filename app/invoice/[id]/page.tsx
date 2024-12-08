@@ -1,3 +1,4 @@
+'use client';
 import InvoiceContainer from "@/components/InvoiceContainer";
 import PageHeader from "@/components/PageHeader";
 import React from "react";

@@ -1,3 +1,4 @@
+'use client'
 import Bottom from '@/components/Bottom'
 import CampaignList from '@/components/CampaignList'
 import PageHeader from '@/components/PageHeader'

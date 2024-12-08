@@ -1,3 +1,4 @@
+'use client';
 import CampaignContainer from "@/modules/Campaign/CampaignContainer";
 import React from "react";
 

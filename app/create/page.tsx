@@ -1,3 +1,4 @@
+'use client';
 import PageHeader from '@/components/PageHeader'
 import CreateContainer from '@/modules/Create/CreateContainer'
 import React from 'react'

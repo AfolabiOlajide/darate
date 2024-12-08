@@ -1,3 +1,4 @@
+'use client'
 import SingleOrganizationContainer from '@/modules/Organization/SingleOrganizationContainer'
 import React from 'react'
 

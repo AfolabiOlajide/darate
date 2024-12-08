@@ -1,3 +1,4 @@
+'use client'
 import PageHeader from '@/components/PageHeader'
 import OrganizationList from '@/modules/Organization/OrganizationList'
 import React from 'react'
