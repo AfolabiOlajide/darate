@@ -77,7 +77,7 @@ const CampaignList = () => {
 
 export default CampaignList;
 
-const CampaignImage = ({ address }: { address: string }) => {
+export const CampaignImage = ({ address }: { address: string }) => {
     const { contract } = useContract({
         address: address,
     });
@@ -112,7 +112,7 @@ const CampaignImage = ({ address }: { address: string }) => {
     );
 };
 
-const CampaignDescription = ({ address }: { address: string }) => {
+export const CampaignDescription = ({ address }: { address: string }) => {
     const { contract } = useContract({
         address: address,
     });
@@ -131,7 +131,7 @@ const CampaignDescription = ({ address }: { address: string }) => {
     );
 };
 
-const CampaignCategory = ({ address }: { address: string }) => {
+export const CampaignCategory = ({ address }: { address: string }) => {
     const { contract } = useContract({
         address: address,
     });

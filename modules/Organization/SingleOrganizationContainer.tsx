@@ -16,6 +16,7 @@ import Bottom from "@/components/Bottom";
 import { toast } from "sonner";
 import useCreateInvoice from "@/hooks/useCreateInvoice";
 import { MdOutlineRefresh } from "react-icons/md";
+import { ethers } from "ethers";
 
 type TabTypes = "Donators" | "Invoices";
 
@@ -62,6 +63,13 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
         params: [],
     });
 
+    const { data: totalRaised, isPending: totalRaisedIsPending } =
+        useReadContract({
+            contract,
+            method: "function totalAmountRaised() view returns (uint256)",
+            params: [],
+        });
+
     const handleGenerateInvoice = async () => {
         if (!account) {
             toast.warning("Please connect your wallet");
@@ -86,16 +94,16 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
 
     const refreshInvoices = async () => {
         setInvoiceLoading(true);
-        const invoices = await fetchUsersInvoice(address);
-        setInvoices(invoices as InvoiceTableType[]);
+        const invoices = await fetchUsersInvoice(owner as string);
+        setInvoices(invoices?.reverse() as InvoiceTableType[]);
         setInvoiceLoading(false);
     };
 
     useEffect(() => {
         async function fetchInvoice() {
             setInvoiceLoading(true);
-            const invoices = await fetchUsersInvoice(address);
-            setInvoices(invoices as InvoiceTableType[]);
+            const invoices = await fetchUsersInvoice(owner as string);
+            setInvoices(invoices?.reverse() as InvoiceTableType[]);
             setInvoiceLoading(false);
         }
 
@@ -131,7 +139,7 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
                             Amount Raised
                         </div>
                         <h3 className="font-bold text-[2rem] text-brand mt-3">
-                            0.2 ETH
+                            {totalRaisedIsPending ? <SkelentonText height={3} /> : `${totalRaised && ethers.utils.formatEther(totalRaised?.toString())} ETH`}
                         </h3>
                         {/* <div className="text-neutral-500 text-sm">
                             of 10 ETH
@@ -236,7 +244,7 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
                                 owner={account?.address}
                             />
                         )}
-                        {active === "Invoices" &&
+                    {active === "Invoices" &&
                         !invoiceLoading &&
                         invoices.length === 0 && (
                             <div className="flex items-center justify-center h-[20vh]">
@@ -245,9 +253,9 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
                                 </p>
                             </div>
                         )}
-                    {active === "Invoices" && account?.address && invoiceLoading && (
-                        <SkelentonText height={10} />
-                    )}
+                    {active === "Invoices" &&
+                        account?.address &&
+                        invoiceLoading && <SkelentonText height={10} />}
                     {active === "Invoices" &&
                         !ownerIsPending &&
                         !invoiceLoading &&
@@ -261,8 +269,8 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
                         ) && (
                             <div className="flex items-center justify-center h-[20vh]">
                                 <p className="text-brand text-2xl font-bold">
-                                    You are not the owner of this organization, or
-                                    you don&apos;t have any invoice for this
+                                    You are not the owner of this organization,
+                                    or you don&apos;t have any invoice for this
                                     organization.
                                 </p>
                             </div>
@@ -274,7 +282,7 @@ const SingleOrganizationContainer = ({ address }: { address: string }) => {
                             </p>
                         </div>
                     )}
-{/* 
+                    {/* 
 
 
                     {active === "Invoices" &&

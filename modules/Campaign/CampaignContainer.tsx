@@ -80,6 +80,12 @@ const CampaignContainer = ({ address }: { address: string }) => {
             params: [],
         });
 
+    const { data: totalAmountReceived, isPending: totalAmountReceivedPending } = useReadContract({
+        contract,
+        method: "function totalAmountReceived() view returns (uint256)",
+        params: [],
+    });
+
     const handleGenerateInvoice = async () => {
         if (!account) {
             toast.warning("Please connect your wallet");
@@ -157,7 +163,7 @@ const CampaignContainer = ({ address }: { address: string }) => {
                             Amount Received
                         </div>
                         <h3 className="font-bold text-[2rem] text-brand mt-3">
-                            0.2 ETH
+                            {totalAmountReceivedPending ? <SkelentonText height={3} /> : (totalAmountReceived ? `${ethers.utils.formatEther(totalAmountReceived?.toString())} ETH` : "0 ETH")} 
                         </h3>
                         <div className="text-neutral-500 text-sm">
                             of{" "}
@@ -277,9 +283,9 @@ const CampaignContainer = ({ address }: { address: string }) => {
                                 </p>
                             </div>
                         )}
-                    {active === "Invoices" && account?.address && invoiceLoading && (
-                        <SkelentonText height={10} />
-                    )}
+                    {active === "Invoices" &&
+                        account?.address &&
+                        invoiceLoading && <SkelentonText height={10} />}
                     {active === "Invoices" &&
                         !ownerPending &&
                         !invoiceLoading &&

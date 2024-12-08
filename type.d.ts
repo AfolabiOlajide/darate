@@ -6,6 +6,7 @@ type InvoiceDetailType = {
     receipient_address: string;
     donator_address: string;
     created_at: number;
+    contractAddress: string;
 }
 
 type InvoiceTableType = {

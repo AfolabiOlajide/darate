@@ -24,7 +24,7 @@ const useCreateInvoice = ({
     contractAddress,
 }: useRequestProps) => {
     const account = useActiveAccount();
-    const { contract } = useContract({ address: recieverIdentity });
+    const { contract } = useContract({ address: contractAddress });
     const {
         mutate: sendTransaction,
         isPending,
@@ -119,7 +119,7 @@ const useCreateInvoice = ({
         // The contentData can contain anything.
         // Consider using rnf_invoice format from @requestnetwork/data-format
         contentData: {
-            reason: "This is test request",
+            reason: `{contract: ${contractAddress}, reason: This is a test invoice}`,
         },
     };
 
@@ -135,7 +135,7 @@ const useCreateInvoice = ({
                 const web3SignatureProvider = new Web3SignatureProvider(
                     provider.provider
                 );
-                console.log("Creating request client....");
+                // console.log("Creating request client....");
                 toast("Creating Request client....");
                 const requestClient = new RequestNetwork({
                     nodeConnectionConfig: {
@@ -152,7 +152,7 @@ const useCreateInvoice = ({
                     // console.log(
                     //     `Created Request: ${JSON.stringify(confirmedRequestData)}`
                     // );
-                    console.log("requestId: ", confirmedRequestData.requestId);
+                    // console.log("requestId: ", confirmedRequestData.requestId);
                     if (confirmedRequestData.requestId) {
                         const invoiceId = confirmedRequestData.requestId;
                         toast.success("Invoice Id created successfully");

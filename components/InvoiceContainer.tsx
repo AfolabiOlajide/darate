@@ -11,6 +11,9 @@ import { toast } from "sonner";
 import usePayInvoice from "@/hooks/usePayInvoice";
 import useContract from "@/hooks/useContract";
 import { MdOutlineRefresh } from "react-icons/md";
+import { HiExternalLink } from "react-icons/hi";
+import Link from "next/link";
+import { getTxHashLink } from "@/lib/utils";
 
 const InvoiceContainer = ({ id }: { id: string }) => {
     const activeAccount = useActiveAccount();
@@ -18,14 +21,15 @@ const InvoiceContainer = ({ id }: { id: string }) => {
     const [invoice, setInvoice] = React.useState<InvoiceDetailType | null>(
         null
     );
+    // console.log("invoice", invoice);
     const { contract } = useContract({
-        address: invoice?.receipient_address as string,
+        address: invoice?.contractAddress as string,
     });
 
     const { payInvoice } = usePayInvoice({
         invoiceId: invoice?.id as string,
         payerIdentity: activeAccount?.address as string,
-        recepientIdentity: invoice?.receipient_address as string,
+        contractAddress: invoice?.contractAddress as string,
     });
 
     const handlePayInvoice = async () => {
@@ -127,7 +131,7 @@ const InvoiceContainer = ({ id }: { id: string }) => {
                     {invoiceIds &&
                         invoiceIds.length > 0 &&
                         invoiceIds.map((item, index) => {
-                            console.log(item.paymentTxHash)
+                            console.log(item.paymentTxHash);
                             if (item.invoiceId !== invoice?.id) return;
                             if (item.paymentTxHash === "") return;
                             return (
@@ -138,9 +142,12 @@ const InvoiceContainer = ({ id }: { id: string }) => {
                                     <span className="whitespace-nowrap">
                                         Payment Hash:
                                     </span>
-                                    <span className="text-brand break-words">
-                                        {item.paymentTxHash}
-                                    </span>
+                                    <a href={getTxHashLink(item.paymentTxHash)} target="_blank" rel="noreferrer" className="">
+                                        <span className="text-brand break-words flex flex-col md:flex-row gap-3 items-start md:items-center">
+                                            {item.paymentTxHash}
+                                            <HiExternalLink className="text-brand ml-3" />
+                                        </span>
+                                    </a>
                                 </div>
                             );
                         })}

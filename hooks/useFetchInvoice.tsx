@@ -45,9 +45,16 @@ const useFetchInvoice = () => {
             const requestStatus =
                 requestData.expectedAmount ===
                 (requestData.balance ? requestData?.balance.balance : "");
+                // console.log("request data invoice by id: ", requestData);
+            const formattedReason = requestData.contentData.reason
+                .replace(/([a-zA-Z0-9_]+)\s*:/g, '"$1":') // Wrap keys in quotes
+                .replace(/:\s*([^,}]+)/g, ': "$1"'); // Wrap values in quotes;
+                // console.log("formatted reason: ", formattedReason);
+            const result = JSON.parse(formattedReason);
+            // console.log("result: ", result);
             const formattedData = {
                 id: requestData.requestId,
-                title: requestData.contentData.reason,
+                title: result.reason,
                 status: requestStatus,
                 amount: requestData.expectedAmount,
                 receipient_address: requestData.payee
@@ -57,6 +64,7 @@ const useFetchInvoice = () => {
                     ? requestData.payer.value
                     : "",
                 created_at: requestData.timestamp,
+                contractAddress: result.contract,
             };
             // console.log(`request data invoice by id: `, formattedData);
             return formattedData;

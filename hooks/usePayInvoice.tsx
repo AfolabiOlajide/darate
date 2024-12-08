@@ -14,11 +14,11 @@ import { useEffect } from "react";
 
 const usePayInvoice = ({
     payerIdentity,
-    recepientIdentity,
+    contractAddress,
     invoiceId,
 }: {
     payerIdentity: string;
-    recepientIdentity: string;
+    contractAddress: string;
     invoiceId: string;
 }) => {
     const account = useActiveAccount();
@@ -28,7 +28,7 @@ const usePayInvoice = ({
         isError,
     } = useSendTransaction();
     const { contract } = useContract({
-        address: recepientIdentity,
+        address: contractAddress,
     });
 
     const requestClientWithoutSignature = new RequestNetwork({
@@ -37,11 +37,11 @@ const usePayInvoice = ({
         },
     });
 
-    const donate = (donationAmount: number) => {
+    const donate = (donationAmount: number, invoiceId: string, paymentTxHash: string) => {
         const transaction = prepareContractCall({
             contract,
-            method: "function donate(address _donator, uint256 _amountDonated)",
-            params: [payerIdentity, BigInt(donationAmount)],
+            method: "function addPaymentTxHash(string _invoiceId, string _paymentTxHash, address _donator, uint256 _amount)",
+            params: [invoiceId, paymentTxHash, payerIdentity, BigInt(donationAmount)],
         });
         sendTransaction(transaction);
     };
@@ -83,7 +83,7 @@ const usePayInvoice = ({
                     },
                 });
 
-                console.log(`_hasSufficientFunds = ${_hasSufficientFunds}`);
+                // console.log(`_hasSufficientFunds = ${_hasSufficientFunds}`);
 
                 if (_hasSufficientFunds) {
                     // user has sufficient funds proceed with payment
@@ -96,8 +96,8 @@ const usePayInvoice = ({
                         if (paymentTx.hash) {
                             toast.success("Payment Sent Successfully");
                             toast("Saving donation to blockchain...");
-                            donate(Number(requestData.expectedAmount));
-                            console.log(`Payment complete. ${paymentTx.hash}`);
+                            donate(Number(requestData.expectedAmount), requestData.requestId, paymentTx.hash);
+                            // console.log(`Payment complete. ${paymentTx.hash}`);
                         }
                     } catch (error) {
                         toast.error("Payment error");
@@ -107,7 +107,7 @@ const usePayInvoice = ({
                     // user doesn't have sufficient funds
                     // show toast
                     toast.error("User does not have sufficient funds");
-                    console.log("user does not have sufficient funds");
+                    // console.log("user does not have sufficient funds");
                 }
             } else {
                 toast.error("Please connect your wallet");

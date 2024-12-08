@@ -1,6 +1,8 @@
 "use client";
 
 import { truncateAddress } from "@/lib/utils";
+import { ethers } from "ethers";
+
 
 export type Donator = {
     donator: string;
@@ -20,8 +22,8 @@ const DonatorsTable = ({donators}: {donators: Donator[]}) => {
                 <tbody>
                     {donators.map((donator, index) => (
                         <tr key={index}>
-                            <td className="text-brand">{truncateAddress(donator.donator)}</td>
-                            <td>{donator.amountDonated.toString()}</td>
+                            <td className="text-brand text-center">{truncateAddress(donator.donator)}</td>
+                            <td className="text-center">{ethers.utils.formatEther(donator.amountDonated.toString())} ETH</td>
                         </tr>
                     ))}
                 </tbody>
